@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reply">
+	<select id="getMaxNo" resultType="Integer">
+		select max(reply_no) from reply
+	</select>
+	<insert id="insertReply" parameterType="model.Reply">
+		insert into reply values (#{reply_no}, #{reply_content}, #{reply_group}, #{reply_order}, #{reply_depth}, #{person_no}, #{product_no})
+	</insert>
+	<select id="allReply" parameterType="Integer" resultType="model.Reply">
+		select * from reply, person where reply.person_no = person.person_no
+		and product_no = #{no} order by reply_order
+	</select>
+	<select id="getReplyMaxOrder" resultType="Integer">
+		select max(reply_order) from reply
+	</select>
+	<delete id="deleteReply" parameterType="Integer">
+		delete from reply where reply_no = #{no}
+	</delete>
+	<insert id="subReply" parameterType="model.Reply">
+		insert into reply values (#{reply_no}, #{reply_content}, #{reply_group}, #{reply_order}, #{reply_depth}, #{person_no}, #{product_no})
+	</insert>
+	<select id="getOrder" parameterType="Integer" resultType="Integer">
+		select reply_order from reply where reply_no = #{replyNo}
+	</select>
+	<update id="setOrder" parameterType="Integer">
+		update reply set reply_order = reply_order + 1 where reply_order > #{orderNo}
+	</update>
+	<select id="getDepth" resultType="Integer">
+		select max(reply_depth) from reply where reply_no = #{replyNo}
+	</select>
+</mapper>

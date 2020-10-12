@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="person">
+	<select id="getMaxNo" resultType="Integer">
+		select max(person_no) from person
+	</select>
+	<insert id="putPerson" parameterType="model.Person">
+		insert into person values (#{person_no}, #{person_name}, #{person_email}, #{person_pwd})
+	</insert>
+	<select id="selectPerson" parameterType="String" resultType="model.Person">
+		select * from person where person_email = #{person_email} and person_pwd = #{person_pwd}
+	</select>
+</mapper>

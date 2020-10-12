@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="product">
+	<select id="getMaxNo" resultType="Integer">
+		select max(product_no) from product
+	</select>
+	<insert id="insertProduct" parameterType="model.Product">
+		insert into product values (#{product_no}, #{product_title}, #{product_content}, #{product_price}, #{product_img}, #{product_date}, #{person_no})
+	</insert>
+	<select id="listProduct" resultType="model.Product">
+		select * 
+		from (
+			select rownum rn, a.* 
+				FROM (
+						select * 
+						from product 
+						order by product_no desc
+						) a
+				)
+		where rn between (#{pageNo}-1)*7 and ((#{pageNo}-1)*6)+6
+		and product_title like '%' ||  #{search} || '%'
+	</select>
+	<select id="listCnt" parameterType="String" resultType="Integer">
+		select count(*) from product where product_title like '%' ||  #{search} || '%'
+	</select>
+	<select id="detail" parameterType="Integer" resultType="model.Product">
+		select * from product, person where product.person_no = person.person_no
+		and product_no = #{no}
+	</select>
+	<delete id="delete" parameterType="Integer">
+		delete from product where product_no = #{no}
+	</delete>
+	<update id="modify" parameterType="model.Product">
+		update product
+		set	product_title = #{product_title},
+			product_content = #{product_content},
+			product_price = #{product_price},
+			product_img = #{product_img}
+		where product_no = #{product_no}
+	</update>
+</mapper>
